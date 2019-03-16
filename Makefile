@@ -1,6 +1,6 @@
 PROJECT_PATH       = /opt/pipehub
 DOCKER_CI_IMAGE    = registry.gitlab.com/pipehub/pipehub/ci
-DOCKER_CI_VERSION  = 1
+DOCKER_CI_VERSION  = 2
 CONFIG_PATH       ?= $(CURDIR)/cmd/pipehub/pipehub.hcl
 WORKSPACE_PATH     = $(CURDIR)
 RAWTAG             = $(shell git tag --points-at | head -n1 | cut -c2-)
@@ -26,8 +26,11 @@ pre-pr: go-test go-linter go-linter-vendor docker-linter
 
 go-test:
 ifeq ($(EXEC_CONTAINER), false)
-	@gotest -mod readonly -failfast -race -coverprofile=test.cover ./...
+	@gotest -mod readonly -failfast -race -covermode=count -coverprofile=test.cover ./...
 	@go tool cover -func=test.cover
+ifneq ($(COVERALLS_TOKEN), "")
+ 	@goveralls -coverprofile=test.cover
+endif
 	@rm -f test.cover
 else
 	TARGET=go-test make docker-exec
@@ -62,6 +65,7 @@ docker-exec:
 		--rm \
 		-e EXEC_CONTAINER=false \
 		-e TAGS=$(TAGS) \
+		-e COVERALLS_TOKEN=$(COVERALLS_TOKEN) \
 		-e "TERM=xterm-256color" \
 		-v $(PWD):$(PROJECT_PATH) \
 		-w $(PROJECT_PATH) \

@@ -6,6 +6,8 @@
 'quality:test':
   extends: .quality
   coverage: '/total:\s*\(statements\)\s*(\d*.\d*%)/'
+  before_script:
+    - '[ $CI_COMMIT_REF_NAME -neq master] || unset COVERALLS_TOKEN'
   script:
     - make go-test
 
