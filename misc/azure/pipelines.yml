@@ -1,10 +1,6 @@
 pool:
   vmImage: Ubuntu 16.04
 
-trigger:
-  branches:
-    - master
-
 jobs:
   - job: A
     steps:
