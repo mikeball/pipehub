@@ -20,46 +20,33 @@ trigger:
       - license
       - readme.md
 
-jobs:
-  - job: A
-    steps:
-      - script: exit 1
+stages:
+  - stage: Quality
+    displayName: Quality stage
+    jobs:
+      - job: Go
+        steps:
+          - script: |
+              go build -mod readonly -o bin/pipehub/pipehub cmd/pipehub/*.go
+            displayName: 'Build'
 
-  - job: B
-    dependsOn: A
-    condition: failed()
-    steps:
-      - script: echo this will run when A fails
+          - script: |
+              make go-test
+            displayName: 'Test'
 
-  - job: C
-    dependsOn:
-      - A
-      - B
-    condition: succeeded('B')
-    steps:
-      - script: echo this will run when B runs and succeeds
-# jobs:
-#   - job: Quality
-#     steps:
-#       - script: |
-#           go build -mod readonly -o bin/pipehub/pipehub cmd/pipehub/*.go
-#         displayName: 'Build'
+          - script: |
+              make go-linter
+            displayName: 'Linter'
 
-#       - script: |
-#           make go-test
-#         displayName: 'Quality - Go Test'
+          - script: |
+              make go-linter-vendor
+            displayName: 'Linter Vendor'
 
-#       - script: |
-#           make go-linter
-#         displayName: 'Quality - Go Linter'
-
-#       - script: |
-#           make go-linter-vendor
-#         displayName: 'Quality - Go Linter Vendor'
-
-#       - script: |
-#           make docker-linter
-#         displayName: 'Quality - Docker Linter'
+      - Job: Docker
+        steps:
+          - script: |
+              make docker-linter
+            displayName: 'Linter'
 # steps:
 #   - job: Quality
 #     steps:
