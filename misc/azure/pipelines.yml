@@ -21,27 +21,45 @@ trigger:
       - readme.md
 
 jobs:
-  - job: Quality
+  - job: A
     steps:
-      - script: |
-          go build -mod readonly -o bin/pipehub/pipehub cmd/pipehub/*.go
-        displayName: 'Build'
+      - script: exit 1
 
-      - script: |
-          make go-test
-        displayName: 'Quality - Go Test'
+  - job: B
+    dependsOn: A
+    condition: failed()
+    steps:
+      - script: echo this will run when A fails
 
-      - script: |
-          make go-linter
-        displayName: 'Quality - Go Linter'
+  - job: C
+    dependsOn:
+      - A
+      - B
+    condition: succeeded('B')
+    steps:
+      - script: echo this will run when B runs and succeeds
+# jobs:
+#   - job: Quality
+#     steps:
+#       - script: |
+#           go build -mod readonly -o bin/pipehub/pipehub cmd/pipehub/*.go
+#         displayName: 'Build'
 
-      - script: |
-          make go-linter-vendor
-        displayName: 'Quality - Go Linter Vendor'
+#       - script: |
+#           make go-test
+#         displayName: 'Quality - Go Test'
 
-      - script: |
-          make docker-linter
-        displayName: 'Quality - Docker Linter'
+#       - script: |
+#           make go-linter
+#         displayName: 'Quality - Go Linter'
+
+#       - script: |
+#           make go-linter-vendor
+#         displayName: 'Quality - Go Linter Vendor'
+
+#       - script: |
+#           make docker-linter
+#         displayName: 'Quality - Docker Linter'
 # steps:
 #   - job: Quality
 #     steps:
