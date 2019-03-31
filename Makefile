@@ -14,13 +14,11 @@ release:
 	@PIPEHUB_DOCKER_IMAGE_VERSION=$(RAWTAG) goreleaser release --rm-dist
 
 build:
-	@go build -tags "$(TAGS)" -o cmd/pipehub/pipehub cmd/pipehub/*.go
+	@go build -o cmd/pipehub/pipehub cmd/pipehub/*.go
 
 generate:
-	@rm -f pipe_dynamic.go
-	@GOOS="" GOARCH="" make build
-	@./cmd/pipehub/pipehub generate -c $(CONFIG_PATH) -w $(WORKSPACE_PATH)
-	@GOOS=${GOOS} GOARCH=${GOARCH} TAGS=pipe make build
+	@rm -f internal/application/server/service/pipe/dynamic.go
+	@go run cmd/pipehub/main.go generate -c $(CONFIG_PATH) -w $(WORKSPACE_PATH)
 
 pre-pr: go-test go-linter go-linter-vendor docker-linter
 
