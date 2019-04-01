@@ -1,7 +1,21 @@
-pool:
-  vmImage: Ubuntu 16.04
+# pool:
+#   vmImage: Ubuntu 16.04
 
 jobs:
-  - job: A
+  - job: job1
+    pool:
+      vmImage: Ubuntu 16.04
     steps:
-      - script: echo foo
+      - script: echo 1
+
+  - job: job2
+    pool:
+      vmImage: Ubuntu 16.04
+    steps:
+      - script: echo 2
+
+  - job: job3
+    pool:
+      vmImage: Ubuntu 16.04
+    steps:
+      - script: echo 3
