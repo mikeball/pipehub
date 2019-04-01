@@ -41,7 +41,7 @@ jobs:
     steps:
       - script: make go-linter-vendor
 
-  - job: quality:go-linter
+  - job: quality:docker-linter
     container: pipehub/ci:1
     pool:
       vmImage: Ubuntu 16.04
