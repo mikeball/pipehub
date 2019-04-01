@@ -1,5 +1,4 @@
 name: $(SourceBranchName)-$(Rev:.r)
-# container: pipehub/ci:1
 
 variables:
   EXEC_CONTAINER: false
@@ -22,6 +21,7 @@ jobs:
     container: pipehub/ci:1
     pool:
       vmImage: Ubuntu 16.04
+    displayName: 'Build'
     steps:
       - script: go build -mod readonly -o bin/pipehub/pipehub cmd/pipehub/*.go
 
@@ -29,6 +29,7 @@ jobs:
     container: pipehub/ci:1
     pool:
       vmImage: Ubuntu 16.04
+    displayName: 'Test'
     steps:
       - script: make go-test
 
@@ -36,6 +37,7 @@ jobs:
     container: pipehub/ci:1
     pool:
       vmImage: Ubuntu 16.04
+    displayName: 'Linter'
     steps:
       - script: make go-linter
 
@@ -43,6 +45,7 @@ jobs:
     container: pipehub/ci:1
     pool:
       vmImage: Ubuntu 16.04
+    displayName: 'Linter Vendor'
     steps:
       - script: make go-linter-vendor
 
@@ -50,5 +53,6 @@ jobs:
     container: pipehub/ci:1
     pool:
       vmImage: Ubuntu 16.04
+    displayName: 'Linter'
     steps:
       - script: make docker-linter
