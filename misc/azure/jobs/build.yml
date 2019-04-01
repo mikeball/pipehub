@@ -1,0 +1,14 @@
+parameters:
+  name: ''
+  container: ''
+  displayName: ''
+  command: ''
+
+jobs:
+  - job: ${{ parameters.name }}
+    container: ${{ parameters.container }}
+    pool:
+      vmImage: Ubuntu 16.04
+    displayName: ${{ parameters.displayName }}
+    steps:
+      - script: $${{ parameters.command }}
