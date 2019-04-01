@@ -17,22 +17,43 @@ trigger:
       - readme.md
 
 jobs:
-  - job: quality
+  - job: quality:go-test
     container: pipehub/ci:1
     pool:
       vmImage: Ubuntu 16.04
-    displayName: Quality
+    displayName: Quality | Go Test
     steps:
       - script: make go-test
-      - script: make go-linter
-      - script: make go-linter-vendor
-      - script: make docker-linter
-  - job: build
+
+  - job: quality:go-linter
     container: pipehub/ci:1
     pool:
       vmImage: Ubuntu 16.04
-    displayName: Build
-    dependsOn: quality
+    displayName: Quality | Go Linter
+    steps:
+      - script: make go-linter
+
+  - job: quality:go-linter
+    container: pipehub/ci:1
+    pool:
+      vmImage: Ubuntu 16.04
+    displayName: Quality | Go Linter Vendor
+    steps:
+      - script: make go-linter-vendor
+
+  - job: quality:go-linter
+    container: pipehub/ci:1
+    pool:
+      vmImage: Ubuntu 16.04
+    displayName: Quality | Docker Linter
+    steps:
+      - script: make docker-linter
+
+  - job: build:go
+    container: pipehub/ci:1
+    pool:
+      vmImage: Ubuntu 16.04
+    displayName: Build | Go
     steps:
       - script: go build -mod readonly -o bin/pipehub/pipehub cmd/pipehub/*.go
   # - job: job2
