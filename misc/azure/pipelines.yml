@@ -1,8 +1,8 @@
 name: $(SourceBranchName)-$(Rev:.r)
 container: pipehub/ci:1
 
-variables:
-  EXEC_CONTAINER: false
+# variables:
+#   EXEC_CONTAINER: false
 
 trigger:
   batch: true
